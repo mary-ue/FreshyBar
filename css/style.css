@@ -528,6 +528,7 @@ fieldset {
   display: block;
   border-radius: 2px;
   background-color: #fff;
+  cursor: pointer;
 }
 
 .checkbox__input::after {
@@ -543,6 +544,7 @@ fieldset {
   background-repeat: no-repeat;
   opacity: 0;
   transition: opacity .3s ease;
+  cursor: pointer;
 }
 
 .checkbox__input:checked::after {
@@ -559,14 +561,67 @@ fieldset {
 
 .checkbox__input:focus {
   border: 1px solid #D5B4A8;
+  border-radius: 2px;
 }
 
 .radio {
-
+  position: relative;
+  display: block;
+  padding-left: 32px;
+  line-height: 24px;
+  cursor: pointer;
 }
 
 .radio__input {
+  position: absolute;
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  margin-left: -32px;
+}
 
+.radio__input:before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  display: block;
+  border-radius: 100%;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.radio__input::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 100%;
+  background-color: #000;
+  opacity: 0;
+  transition: opacity .3s ease;
+  cursor: pointer;
+}
+
+.radio__input:checked::after {
+  opacity: 1;
+}
+
+.radio__input:hover::before {
+  background-color: #f6f6f6;
+}
+
+.radio__input:focus-visible::before {
+  outline: none;
+}
+
+.radio__input:focus {
+  border: 1px solid #D5B4A8;
+  border-radius: 100%;
 }
 
 @media (max-width: 1240px) {
