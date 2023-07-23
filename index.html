@@ -192,7 +192,7 @@
                 <input class="radio__input" type="radio" name="cup" value="bio">Биоразлагаемый <span class="make__upsale">(+20 ₽)</span>
               </label>
               <label class="make__label radio">
-                <input class="radio__input" type="radio" name="cup" value="plastic">Пластиковый <span class="make__upsale">(+0 ₽)</span>
+                <input class="radio__input" type="radio" checked name="cup" value="plastic">Пластиковый <span class="make__upsale">(+0 ₽)</span>
               </label>
             </fieldset>
           </div>
@@ -216,6 +216,7 @@
           Банановый смузи
         </h3>
         <form class="make__form make__form_add">
+          <input class="make__input-title" type="hidden" name="title">
           <div class="make__wrap-add">
             <fieldset class="make__fieldset make__fieldset_topping">
               <legend class="make__legend">Дополнительно:</legend>
@@ -232,15 +233,18 @@
                 <input class="radio__input" type="radio" name="cup" value="bio">Биоразлагаемый <span class="make__upsale">(+20 ₽)</span>
               </label>
               <label class="make__label radio">
-                <input class="radio__input" type="radio" name="cup" value="plastic">Пластиковый <span class="make__upsale">(+0 ₽)</span>
+                <input class="radio__input" type="radio" checked name="cup" value="plastic">Пластиковый <span class="make__upsale">(+0 ₽)</span>
               </label>
             </fieldset>
           </div>
           <div class="make__footer">
             <button class="btn make__add-btn" type="submit">Добавить</button>
             <div class="make__total">
+              <input class="make__input-start-price" type="hidden">
               <p class="make__total-price text-red">340 ₽</p>
+              <input class="make__input-price" type="hidden" name="price">
               <p class="make__total-size">300мл</p>
+              <input class="make__input-size" type="hidden" name="size">
             </div>
           </div>
         </form>
