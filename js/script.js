@@ -16,13 +16,13 @@ const price = {
 const cartDataControl = {
   get() {
     return JSON.parse(localStorage.getItem('freshyBarCart') || '[]');
-  }, 
+  },
   add(item) {
     const cartData = this.get();
     item.idls = Math.random().toString(36).substring(2, 8);
     cartData.push(item);
     localStorage.setItem('freshyBarCart', JSON.stringify(cartData));
-  }, 
+  },
   remove(idls) {
     const cartData = this.get();
     const index = cart.findIndex((item) => item.idls === idls);
@@ -30,9 +30,9 @@ const cartDataControl = {
       cartData.splice(index, 1);
     }
     localStorage.setItem('freshyBarCart', JSON.stringify(cartData));
-  }, 
+  },
   clear() {
-    localStorage.removeItem('freshyBarCart')
+    localStorage.removeItem('freshyBarCart');
   },
 };
 
@@ -189,8 +189,8 @@ const formControl = (form, cb) => {
     if (cb) {
       cb();
     }
-  })
-}
+  });
+};
 
 const calculateMakeYourOwn = () => {
   const modalMakeOwn = document.querySelector('.modal_make-your-own');
@@ -205,7 +205,9 @@ const calculateMakeYourOwn = () => {
 
     const data = getFormData(formMakeOwn);
     if (data.ingredients) {
-      const ingredients = Array.isArray(data.ingredients) ? data.ingredients.join(', ') : data.ingredients;
+      const ingredients = Array.isArray(data.ingredients)
+        ? data.ingredients.join(', ')
+        : data.ingredients;
 
       makeInputTitle.value = `Конструктор: ${ingredients}`;
       makeAddBtn.disabled = false;
@@ -237,8 +239,10 @@ const calculateAdd = () => {
   const makeTitle = modalAdd.querySelector('.make__title');
   const makeInputTitle = modalAdd.querySelector('.make__input-title');
   const makeTotalPrice = modalAdd.querySelector('.make__total-price');
-  const makeInputStartPrice = modalAdd.querySelector('.make__input-start-price');
-  const makeInputPrice= modalAdd.querySelector('.make__input-price');
+  const makeInputStartPrice = modalAdd.querySelector(
+    '.make__input-start-price'
+  );
+  const makeInputPrice = modalAdd.querySelector('.make__input-price');
   const makeTotalSize = modalAdd.querySelector('.make__total-size');
   const makeInputSize = modalAdd.querySelector('.make__input-size');
 
@@ -246,12 +250,12 @@ const calculateAdd = () => {
     const totalPrice = calculateTotalPrice(formAdd, +makeInputStartPrice.value);
     makeInputPrice.value = totalPrice;
     makeTotalPrice.textContent = `${totalPrice} ₽`;
-  }
+  };
 
   formAdd.addEventListener('change', handlerChange);
   formControl(formAdd, () => {
-    modalAdd.closeModal('close');             
-  })
+    modalAdd.closeModal('close');
+  });
 
   const fillInForm = (data) => {
     makeTitle.textContent = data.title;
@@ -262,22 +266,106 @@ const calculateAdd = () => {
     makeTotalSize.textContent = data.size;
     makeInputSize.value = data.size;
     handlerChange();
-  }
+  };
 
   const resetForm = () => {
     makeTitle.textContent = '';
     makeTotalPrice.textContent = '';
     makeTotalSize.textContent = '';
-    
-    formAdd.reset();
-  }
 
+    formAdd.reset();
+  };
 
   return { fillInForm, resetForm };
 };
 
+const createCartItem = (item) => {
+  const li = document.createElement('li');
+  li.classList.add('order__item');
+  li.innerHTML = `
+    <img class="order__img" src="img/banana.jpg" alt="${item.title}">
+    <div class="order__info">
+      <h3 class="order__name">
+        ${item.title}
+      </h3>
+      <ul class="order__topping-list">
+        <li class="order__topping-item">${item.size} мл</li>
+        <li class="order__topping-item">${item.cup}</li>
+        ${
+          item.topping ? (Array.isArray(item.topping)
+            ? item.topping.map(topping => 
+              `<li class="order__topping-item">${topping}</li>`
+            ) 
+            : `<li class="order__topping-item">${item.topping}</li>`)
+            : ''
+          }
+      </ul>
+    </div>
+    <button class="order__item-delete" data-idls="${item.idls}"
+      aria-label="Удалить коктейль из корзины"></button>
+    <p class="order__item-price">${item.price}&nbsp;₽</p>
+  `;
+
+  return li;
+}
+
+const renderCart = () => {
+  const modalOrder = document.querySelector('.modal_order');
+
+  const orderCount = modalOrder.querySelector('.order__count');
+  const orderList = modalOrder.querySelector('.order__list');
+  const orderTotalPrice = modalOrder.querySelector('.order__total-price');
+  const orderForm = modalOrder.querySelector('.order__form');
+
+  const orderListData = cartDataControl.get();
+
+  orderList.textContent = '';
+  orderCount.textContent = `(${orderListData.length})`;
+
+  orderListData.forEach(item => {
+    orderList.append(createCartItem(item));
+  });
+
+  orderTotalPrice.textContent = `${orderListData.reduce((acc, item) => 
+    acc + +item.price, 0)} ₽`;
+
+    orderForm.addEventListener('submit', async (evt) => {
+      evt.preventDefault();
+      if (!orderListData.length) {
+        alert('Корзина пустая!');
+        orderForm.reset();
+        modalOrder.closeModal('close');
+        return;
+      }
+
+      const data = getFormData(orderForm);
+      const response = await fetch(`${API_URL}api/order`, {
+        method: 'POST', 
+        body: JSON.stringify({
+          ...data, 
+          products: orderListData,
+        }), 
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      const { message } = await response.json();
+
+      alert(message);
+      cartDataControl.clear();
+      orderForm.reset();
+      modalOrder.closeModal('close');
+    });
+
+};
+
 const init = async () => {
-  modalController({ modal: '.modal_order', btnOpen: '.header__btn-order' });
+  modalController({ 
+    modal: '.modal_order', 
+    btnOpen: '.header__btn-order',
+    open: renderCart,
+  });
 
   const { resetForm: resetFormMakeYourOwn } = calculateMakeYourOwn();
 
