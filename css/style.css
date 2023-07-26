@@ -76,6 +76,19 @@ fieldset {
 
 /* common */
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  white-space: nowrap;
+  clip-path: inset(100%);
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}
+
 .container {
   --width: 1180px;
   --padding: 30px;
@@ -90,6 +103,22 @@ fieldset {
   border-radius: 40px;
   background-color:  #F44;
   box-shadow: 0px 4px 20px 0px #FA5A5A;
+  outline: none;
+  border: 1px solid transparent;
+  transition: all .2s ease-in-out;
+}
+
+.btn:hover:not(:disabled) {
+  background-color: #ff6767;
+}
+
+.btn:active:not(:disabled) {
+  background-color: #52e36a;
+  box-shadow: 0px 4px 20px 0px #52e36a;
+}
+
+.btn:focus:not(:disabled) {
+  border-color: #d5b4a8;
 }
 
 .btn:disabled {
@@ -124,8 +153,35 @@ fieldset {
 }
 
 .header__btn-order {
+  position: relative;
+  margin-right: 32px;
   width: 24px;
   height: 24px;
+}
+
+.header__btn-order::after {
+  content: attr(data-count);
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 10px;
+  display: block;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  color: #fff;
+  background-color: #f44;
+  border: 2px solid #f8e8e2;
+  border-radius: 50%;
+  line-height: 16px;
+}
+
+.header__btn-order[data-count="0"]::after {
+  display: none;
+}
+
+.header__btn {
+  display: block;
 }
 
 /* hero */
@@ -174,7 +230,8 @@ fieldset {
 
 .hero__img {
   position: absolute;
-  bottom: 13%;
+  width: 60%;
+  bottom: 9%;
   left: 50%;
   transform: translateX(-50%);
   width: 55%;
@@ -183,6 +240,7 @@ fieldset {
 .decor {
   position: absolute;
   inset: 0;
+  pointer-events: nne;
 }
 
 .decor__img {
@@ -311,7 +369,7 @@ fieldset {
 
 .cocktail__price {
   font-weight: 600;
-  text-align: end;
+  text-align: right;
 }
 
 .cocktail__size {
@@ -426,6 +484,7 @@ fieldset {
 .order__img {
   grid-area: image;
   max-width: 100%;
+  border-radius: 8px;
 }
 
 .order__info {
@@ -455,6 +514,15 @@ fieldset {
   width: 24px;
   height: 24px;
   background-image: url('../img/delete.svg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  transition: background-image .3s ease-in-out;
+}
+
+.order__item-delete:hover {
+  width: 24px;
+  height: 24px;
+  background-image: url('../img/delete-hover.svg');
 }
 
 .order__item-price {
@@ -494,6 +562,17 @@ fieldset {
   border-radius: 8px;
   background-color: #fff;
   border: none;
+  border: 1px solid transparent;
+  outline: none;
+  transition: all .3s ease-in-out;
+}
+
+.order__input:focus {
+  border-color:  #D5B4A8;
+}
+
+.order__input:hover:not(:active) {
+  background-color: #F6F6F6;
 }
 
 .order__submit {
@@ -737,11 +816,6 @@ fieldset {
     margin-top: -50px;
   }
 
-  .hero__img {
-    bottom: 9%;
-    width: 60%;
-  }
-
   .decor__img01 {
     width: 131px;
     height: 125px;
@@ -911,11 +985,16 @@ fieldset {
   }
 
   .cocktail__title {
-    flex: 0 0 100%;
+    grid-column: 1/3;
+    grid-row: 1/2;
+  }
+
+  .cocktail__price {
+    text-align: left;
   }
 
   .cocktail__size {
-    flex: auto;
+    align-self: end;
     font-size: 10px;
   }
 
@@ -933,6 +1012,10 @@ fieldset {
 
   .footer__developer-item {
     margin-bottom: 6px;
+  }
+
+  .make {
+    padding: 30px 30px;
   }
 }
 
@@ -1020,6 +1103,83 @@ fieldset {
 
   .footer__logo {
     width: 120px;
+  }
+
+  .modal {
+    padding: 10px;
+  }
+
+  .make, 
+  .order {
+    padding: 24px 15px;
+  }
+
+  .make__title {
+    margin-bottom: 25px;
+    font-size: 24px;
+  }
+
+  .make__fieldset_ingredients {
+    margin-bottom: 24px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px 15px;
+  }
+
+  .make__fieldset_topping {
+    gap: 12px 15px;
+  }
+
+  .make__fieldset_cup {
+    gap: 12px 15px;
+  }
+
+  .make__legend {
+    margin-bottom: 12px;
+  }
+
+  .make__wrap-add {
+    margin-bottom: 24px;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .make__upsale {
+    font-size: 10px;
+  }
+
+  .make__add-btn {
+    min-width: auto;
+  }
+
+  .order__title {
+    margin-bottom: 20px;
+    font-size: 24px;
+  }
+
+  .order__list {
+    margin-bottom: 20px;
+  }
+
+  .order__price {
+    margin-bottom: 20px;
+  }
+
+  .order__form {
+    display: flex;
+    flex-direction: column;
+    row-gap: 8px;
+  }
+
+  .order__input {
+    padding: 8px 12px;
+    height: 32px;
+  }
+
+  .order__submit {
+    margin-top: 12px;
+    align-self: end;
+    width: max-content;
+    max-width: 100%;
   }
 }
 
@@ -1228,7 +1388,7 @@ fieldset {
 
 @keyframes flyingMobile03 {
   0% {
-    bottom: -200%;
+    bottom: -300%;
     left: 36%;
   }
 
